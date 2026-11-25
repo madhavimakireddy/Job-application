@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerFlow - Job Application Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- LOGIN AND SIGNUP -->
+    <section id="authPage" class="auth-page">
+        <div class="auth-card">
+            <div class="logo">Career<span>Flow</span></div>
+            <h2 id="authTitle">Welcome Back!</h2>
+            <p id="authSubtitle">Login to manage your job applications.</p>
+
+            <form id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Email address" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button type="submit" class="primary-btn">Login</button>
+            </form>
+
+            <form id="signupForm" hidden>
+                <input type="text" id="signupName" placeholder="Full name" required>
+                <input type="email" id="signupEmail" placeholder="Email address" required>
+                <input type="password" id="signupPassword" placeholder="Create password (min. 6 characters)" minlength="6" required>
+                <button type="submit" class="primary-btn">Create Account</button>
+            </form>
+
+            <p class="switch-text">
+                <span id="switchMessage">Don't have an account?</span>
+                <button type="button" id="switchAuth" onclick="toggleAuth()">Sign Up</button>
+            </p>
+            <p id="authMessage" class="message"></p>
+        </div>
+    </section>
+
+    <!-- MAIN DASHBOARD -->
+    <div id="dashboard" class="app-shell" hidden>
+
+        <aside class="sidebar">
+            <h2 class="logo">Career<span>Flow</span></h2>
+            <p class="side-label">MENU</p>
+
+            <nav>
+                <button onclick="showPage('overview')" class="nav-btn active">Dashboard</button>
+                <button onclick="showPage('applications')" class="nav-btn">Applications</button>
+                <button onclick="showPage('calendar')" class="nav-btn">Follow-ups</button>
+                <button onclick="showPage('analytics')" class="nav-btn">Analytics</button>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <p id="welcomeUser">Welcome!</p>
+                <button onclick="logout()" class="logout-btn">Logout</button>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div>
+                    <h1>Job Application Tracker</h1>
+                    <p>Manage your career journey in one place.</p>
+                </div>
+                <button class="primary-btn" onclick="openForm()">+ Add Application</button>
+            </header>
+
+            <!-- OVERVIEW -->
+            <section id="overview" class="page">
+                <h2>Dashboard Overview</h2>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <p>Total Applications</p>
+                        <h2 id="total">0</h2>
+                    </div>
+                    <div class="stat-card">
+                        <p>In Progress</p>
+                        <h2 id="progress">0</h2>
+                    </div>
+                    <div class="stat-card">
+                        <p>Interviews</p>
+                        <h2 id="interviews">0</h2>
+                    </div>
+                    <div class="stat-card">
+                        <p>Offers</p>
+                        <h2 id="offers">0</h2>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Recent Applications</h3>
+                    <div id="recent" class="recent-list">No applications yet.</div>
+                </div>
+
+                <div class="card">
+                    <h3>Upcoming Follow-ups</h3>
+                    <div id="reminders">No upcoming follow-ups.</div>
+                </div>
+            </section>
+
+            <!-- APPLICATIONS -->
+            <section id="applications" class="page" hidden>
+                <div class="section-heading">
+                    <h2>My Applications</h2>
+                    <input type="search" id="search" placeholder="Search company or role...">
+                </div>
+
+                <div class="card table-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Job Role</th>
+                                <th>Location</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applicationList"></tbody>
+                    </table>
+                    <p id="emptyApplications">No applications added yet.</p>
+                </div>
+            </section>
+
+            <!-- FOLLOW-UPS -->
+            <section id="calendar" class="page" hidden>
+                <h2>Follow-up Reminders</h2>
+                <div class="card">
+                    <div id="allReminders">No follow-ups scheduled.</div>
+                </div>
+            </section>
+
+            <!-- ANALYTICS -->
+            <section id="analytics" class="page" hidden>
+                <h2>Application Analytics</h2>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <p>Response Rate</p>
+                        <h2 id="response">0%</h2>
+                    </div>
+                    <div class="stat-card">
+                        <p>Offer Rate</p>
+                        <h2 id="offerRate">0%</h2>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Application Status Breakdown</h3>
+                    <div id="breakdown"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ADD APPLICATION MODAL -->
+    <div id="formModal" class="modal">
+        <div class="form-box">
+            <button class="close-btn" onclick="closeForm()">×</button>
+            <h2>Add Job Application</h2>
+
+            <form id="jobForm">
+                <input type="text" id="company" placeholder="Company name" required>
+                <input type="text" id="role" placeholder="Job role" required>
+                <input type="text" id="location" placeholder="Location">
+
+                <select id="jobType">
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Internship">Internship</option>
+                    <option value="Remote">Remote</option>
+                </select>
+
+                <label for="date">Application date</label>
+                <input type="date" id="date" required>
+
+                <label for="status">Application status</label>
+                <select id="status">
+                    <option value="Saved">Saved</option>
+                    <option value="Applied">Applied</option>
+                    <option value="Interview">Interview</option>
+                    <option value="Offer">Offer</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+
+                <label for="followDate">Follow-up date (optional)</label>
+                <input type="date" id="followDate">
+
+                <input type="url" id="jobUrl" placeholder="Job link (optional)">
+                <textarea id="notes" placeholder="Notes (optional)"></textarea>
+
+                <button type="submit" class="primary-btn">Save Application</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
